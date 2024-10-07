@@ -1,7 +1,6 @@
 package com.example.androidcomposestudyapp.main
 
 import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -29,11 +27,10 @@ import com.example.androidcomposestudyapp.main.vm.MainState
 import com.example.androidcomposestudyapp.main.vm.MainViewModel
 import com.example.domain.entity.User
 import com.example.myapplication.ui.theme.secondaryLight
-import com.example.myapplication.ui.theme.tertiaryLight
-import kotlin.math.log
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun MainScreen(viewModel: MainViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
+fun MainScreen(viewModel: MainViewModel = koinViewModel()) {
     val state by viewModel.state.collectAsState()
     Box(modifier = Modifier.fillMaxSize()) {
         when (val st = state) {

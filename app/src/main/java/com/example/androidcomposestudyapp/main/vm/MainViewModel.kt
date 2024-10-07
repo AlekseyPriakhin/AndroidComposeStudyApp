@@ -2,17 +2,13 @@ package com.example.androidcomposestudyapp.main.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.data.repository.UserRepository
 import com.example.domain.usecase.UserUseCase
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class MainViewModel: ViewModel() {
-
-    private val useCase = UserUseCase(UserRepository())
-
+class MainViewModel(private val useCase: UserUseCase): ViewModel() {
     private val _state = MutableStateFlow<MainState>(MainState.Loading)
     private val exceptionHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
         viewModelScope.launch {
