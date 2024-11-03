@@ -22,20 +22,22 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.example.androidcomposestudyapp.item.ItemScreenRoute
 import com.example.androidcomposestudyapp.main.vm.MainState
 import com.example.androidcomposestudyapp.main.vm.MainViewModel
-import com.example.domain.entity.User
+import com.example.domain.entity.Item
 import com.example.myapplication.ui.theme.secondaryLight
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun MainScreen(viewModel: MainViewModel = koinViewModel()) {
+fun MainScreen(navController: NavController, viewModel: MainViewModel = koinViewModel()) {
     val state by viewModel.state.collectAsState()
     Box(modifier = Modifier.fillMaxSize()) {
         when (val st = state) {
             is MainState.Content -> {
-                UserList(list = st.list)
+                ItemList(list = st.list, navController)
             }
 
             is MainState.Error -> {
@@ -55,15 +57,15 @@ fun ErrorState(message: String) {
 }
 
 @Composable
-fun UserCard(user: User) {
+fun ItemCard(item: Item, navController: NavController) {
     Row(modifier = Modifier
         .height(120.dp)
         .fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(12.dp)) {
         Column {
-            if(user.avatar != null)
-                AsyncImage(user.avatar,
-                    "user ${user.name} avatar",
+            if(item.imageURL != null)
+                AsyncImage(item.imageURL,
+                    "user ${item.name} avatar",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxHeight().width(120.dp))
             else Box(modifier = Modifier
@@ -72,23 +74,25 @@ fun UserCard(user: User) {
         }
         Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween) {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Row { Text(user.name, fontWeight = FontWeight.W600, fontSize = 24.sp) }
-                Row { Text(if(user.about != null) user.about.toString() else "Нет описания" ) }
+                Row { Text(item.name, fontWeight = FontWeight.W600, fontSize = 24.sp) }
+                Row { Text(if(item.about != null) item.about.toString() else "Нет описания" ) }
             }
 
             Row(verticalAlignment = Alignment.Bottom) {
                 Button(onClick = {
-                    Log.println(Log.INFO, "MainScreen", "Clicked user ${user.id} - ${user.name}")
+                    Log.println(Log.INFO, "MainScreen", "Clicked item ${item.id} - ${item.name}")
+                    navController.navigate(ItemScreenRoute(item.id.toLong()))
+
                 })
-                { Text("Скачать") }
+                { Text("Перейти") }
             }
         }
     }
 }
 
 @Composable
-fun UserList(list: List<User>) {
+fun ItemList(list: List<Item>, navController: NavController) {
     Column(verticalArrangement = Arrangement.spacedBy(16.dp),  modifier = Modifier.fillMaxSize()) {
-        list.forEach { user -> UserCard(user) }
+        list.forEach { user -> ItemCard(user, navController) }
     }
 }

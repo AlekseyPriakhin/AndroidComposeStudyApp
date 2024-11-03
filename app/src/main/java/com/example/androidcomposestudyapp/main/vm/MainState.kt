@@ -1,6 +1,6 @@
 package com.example.androidcomposestudyapp.main.vm
 
-import com.example.domain.entity.User
+import com.example.domain.entity.Item
 
 sealed class MainState {
     object Loading : MainState()
@@ -9,6 +9,6 @@ sealed class MainState {
     ) : MainState()
 
     data class Content(
-        val list: List<User>
+        val list: List<Item>
     ) : MainState()
 }
