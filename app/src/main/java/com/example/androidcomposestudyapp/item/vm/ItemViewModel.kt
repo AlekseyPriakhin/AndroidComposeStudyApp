@@ -1,10 +1,13 @@
 package com.example.androidcomposestudyapp.item.vm
 
+import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.example.androidcomposestudyapp.item.ItemScreenRoute
+import com.example.data.data.storage.ILocalStorage
 import com.example.data.data.usecase.ItemByIdUseCase
 import com.example.myapplication.details.vm.ItemState
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -12,7 +15,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class ItemViewModel(private val useCase: ItemByIdUseCase, private val savedStateHandle: SavedStateHandle,): ViewModel() {
+class ItemViewModel(private val useCase: ItemByIdUseCase,
+                    private val savedStateHandle: SavedStateHandle,
+                    private  val storage: ILocalStorage): ViewModel() {
     private val _state = MutableStateFlow<ItemState>(ItemState.Loading)
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         viewModelScope.launch {
@@ -33,6 +38,9 @@ class ItemViewModel(private val useCase: ItemByIdUseCase, private val savedState
         }
     }
 
+    val isRead = mutableStateOf(isRead())
+        get() = field
+
     val state: StateFlow<ItemState>
         get() = _state
 
@@ -40,11 +48,18 @@ class ItemViewModel(private val useCase: ItemByIdUseCase, private val savedState
         loadContent()
     }
 
-//    fun markAsRead() {
-//        val route = savedStateHandle.toRoute<DetailsScreenRoute>()
-//        storage.markAsRead(route.id)
-//        loadContent()
-//    }
+    fun markAsRead() {
+        val route = savedStateHandle.toRoute<ItemScreenRoute>()
+        storage.markAsRead(route.id.toInt())
+        Log.println(Log.INFO, "MainScreen", "Read ${route.id}")
+        isRead.value = true
+        loadContent()
+    }
+
+    private fun isRead(): Boolean {
+        val route = savedStateHandle.toRoute<ItemScreenRoute>()
+        return storage.isRead(route.id.toInt())
+    }
 
     private fun loadContent() {
         viewModelScope.launch(context = exceptionHandler) {

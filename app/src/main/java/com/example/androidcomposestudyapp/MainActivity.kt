@@ -17,6 +17,7 @@ import com.example.androidcomposestudyapp.item.ItemScreenRoute
 import com.example.androidcomposestudyapp.main.MainScreen
 import com.example.androidcomposestudyapp.main.MainScreenRoute
 import com.example.myapplication.ui.theme.MyApplicationTheme
+import org.koin.compose.KoinContext
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,17 +25,19 @@ class MainActivity : ComponentActivity() {
 
 
         setContent {
-            MyApplicationTheme {
-                Surface(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(start = 16.dp, top = 16.dp, end = 16.dp),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    val navController = rememberNavController()
-                    NavHost(navController = navController, startDestination = MainScreenRoute) {
-                        composable<MainScreenRoute> { MainScreen(navController) }
-                        composable<ItemScreenRoute> { ItemScreen(navController) }
+            KoinContext {
+                MyApplicationTheme {
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(start = 16.dp, top = 16.dp, end = 16.dp),
+                        color = MaterialTheme.colorScheme.background
+                    ) {
+                        val navController = rememberNavController()
+                        NavHost(navController = navController, startDestination = MainScreenRoute) {
+                            composable<MainScreenRoute> { MainScreen(navController) }
+                            composable<ItemScreenRoute> { ItemScreen(navController) }
+                        }
                     }
                 }
             }
