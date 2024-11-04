@@ -1,7 +1,6 @@
-package com.example.data.repository
+package com.example.data.data.repository
 
 import com.example.domain.entity.Item
-import com.example.domain.repository.IItemRepository
 import kotlinx.coroutines.delay
 
 class ItemRepository: IItemRepository {

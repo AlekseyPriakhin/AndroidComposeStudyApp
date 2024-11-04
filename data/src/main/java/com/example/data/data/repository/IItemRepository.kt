@@ -1,4 +1,4 @@
-package com.example.domain.repository
+package com.example.data.data.repository
 
 import com.example.domain.entity.Item
 

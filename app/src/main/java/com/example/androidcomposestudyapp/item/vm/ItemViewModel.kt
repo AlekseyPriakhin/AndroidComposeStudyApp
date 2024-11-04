@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.example.androidcomposestudyapp.item.ItemScreenRoute
-import com.example.domain.usecase.ItemByIdUseCase
+import com.example.data.data.usecase.ItemByIdUseCase
 import com.example.myapplication.details.vm.ItemState
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
