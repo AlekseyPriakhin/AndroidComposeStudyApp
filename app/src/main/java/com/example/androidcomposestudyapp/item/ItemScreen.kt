@@ -1,5 +1,6 @@
 package com.example.androidcomposestudyapp.item
 
+import android.util.Log
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -23,6 +24,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -31,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.androidcomposestudyapp.R
 import com.example.androidcomposestudyapp.item.vm.ItemViewModel
+import com.example.androidcomposestudyapp.ui.theme.Like
 import com.example.domain.entity.Item
 import com.example.myapplication.details.vm.ItemState
 import org.koin.androidx.compose.koinViewModel
@@ -56,6 +59,15 @@ fun ItemScreen(navController: NavController, viewModel: ItemViewModel = koinView
                         painter = painterResource(id = R.drawable.arrow_back),
                         contentDescription = ""
                     )
+                },
+                actions = {
+                    if (state is ItemState.Content) {
+                        val content = state as ItemState.Content
+                        val like = remember { mutableStateOf(viewModel.isLiked(content.element)) }
+                        Like(modifier = Modifier, like = like) {
+                            viewModel.toggleLike(content.element) { like.value = !like.value }
+                        }
+                    }
                 }
             )
         }
@@ -65,8 +77,10 @@ fun ItemScreen(navController: NavController, viewModel: ItemViewModel = koinView
         ) {
             when (val st = state) {
                 is ItemState.Content -> {
-                    Content(st.element, viewModel.isRead)
-                    if(!viewModel.isRead.value) Progress(viewModel)
+                    val isRead = remember { mutableStateOf(viewModel.isRead()) }
+                    Content(st.element, isRead)
+
+                    if(!isRead.value) Progress(viewModel)
                 }
 
                 is ItemState.Error -> {

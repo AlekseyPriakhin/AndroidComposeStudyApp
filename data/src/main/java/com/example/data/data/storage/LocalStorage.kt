@@ -14,4 +14,13 @@ class LocalStorage(private val sharedPreferences: SharedPreferences): ILocalStor
         return sharedPreferences.getBoolean("read_${id}", false)
     }
 
+    override fun toggleLike(id: Int) {
+        if(!isLiked(id)) sharedPreferences.edit { putBoolean("liked_${id}", true) }
+        else sharedPreferences.edit { remove("liked_${id}") }
+    }
+
+    override fun isLiked(id: Int): Boolean {
+        return sharedPreferences.getBoolean("liked_${id}", false)
+    }
+
 }

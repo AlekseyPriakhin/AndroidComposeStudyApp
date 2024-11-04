@@ -9,6 +9,7 @@ import androidx.navigation.toRoute
 import com.example.androidcomposestudyapp.item.ItemScreenRoute
 import com.example.data.data.storage.ILocalStorage
 import com.example.data.data.usecase.ItemByIdUseCase
+import com.example.domain.entity.Item
 import com.example.myapplication.details.vm.ItemState
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,9 +39,6 @@ class ItemViewModel(private val useCase: ItemByIdUseCase,
         }
     }
 
-    val isRead = mutableStateOf(isRead())
-        get() = field
-
     val state: StateFlow<ItemState>
         get() = _state
 
@@ -51,14 +49,25 @@ class ItemViewModel(private val useCase: ItemByIdUseCase,
     fun markAsRead() {
         val route = savedStateHandle.toRoute<ItemScreenRoute>()
         storage.markAsRead(route.id.toInt())
-        Log.println(Log.INFO, "MainScreen", "Read ${route.id}")
-        isRead.value = true
+        Log.println(Log.INFO, "ItemScreen", "Read ${route.id}")
         loadContent()
     }
 
-    private fun isRead(): Boolean {
+    fun toggleLike(element: Item?, onToggle: () -> Unit = {}) {
+        if (element == null) return
+        Log.println(Log.INFO, "ItemScreen", "Toggle liked ${element.id}")
+        storage.toggleLike(element.id)
+        onToggle()
+    }
+
+    fun isRead(): Boolean {
         val route = savedStateHandle.toRoute<ItemScreenRoute>()
         return storage.isRead(route.id.toInt())
+    }
+
+    fun isLiked(element: Item?): Boolean {
+        if(element == null) return false;
+        return storage.isLiked(element.id)
     }
 
     private fun loadContent() {
