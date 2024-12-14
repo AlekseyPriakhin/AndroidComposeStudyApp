@@ -38,7 +38,7 @@ class NotificationService : Service() {
 
     private fun doWork() {
         scope.launch {
-            delay(100_000)
+            delay(5_000)
             withContext(Dispatchers.Main) {
                 stopSelf()
             }

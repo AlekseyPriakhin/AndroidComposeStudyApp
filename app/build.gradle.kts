@@ -77,6 +77,10 @@ dependencies {
 
     implementation(libs.androidx.work.runtime.ktx)
 
+    implementation (libs.androidx.glance.appwidget)
+    implementation (libs.androidx.glance.material3)
+    implementation (libs.androidx.glance.material)
+
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation (libs.androidx.core.ktx.v180)
     implementation( platform(libs.kotlin.bom))

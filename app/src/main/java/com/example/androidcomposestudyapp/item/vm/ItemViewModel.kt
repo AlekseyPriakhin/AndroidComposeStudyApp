@@ -1,7 +1,9 @@
 package com.example.androidcomposestudyapp.item.vm
 
 import android.util.Log
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,6 +17,7 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import org.koin.core.component.getScopeId
 
 class ItemViewModel(private val useCase: ItemByIdUseCase,
                     private val savedStateHandle: SavedStateHandle,
@@ -41,6 +44,11 @@ class ItemViewModel(private val useCase: ItemByIdUseCase,
 
     val state: StateFlow<ItemState>
         get() = _state
+
+    private val _itemId = savedStateHandle.toRoute<ItemScreenRoute>().id.toInt()
+    private val _like = mutableStateOf(storage.isLiked(_itemId));
+    val like: MutableState<Boolean>
+        get() = _like
 
     init {
         loadContent()

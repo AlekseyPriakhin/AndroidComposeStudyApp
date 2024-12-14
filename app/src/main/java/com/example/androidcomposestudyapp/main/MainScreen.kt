@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -25,6 +26,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -39,6 +41,7 @@ import coil.compose.AsyncImage
 import com.example.androidcomposestudyapp.item.ItemScreenRoute
 import com.example.androidcomposestudyapp.main.vm.MainState
 import com.example.androidcomposestudyapp.main.vm.MainViewModel
+import com.example.androidcomposestudyapp.media.MediaService
 import com.example.androidcomposestudyapp.services.NotificationService
 import com.example.androidcomposestudyapp.workers.MyWorker
 import com.example.domain.entity.Item
@@ -85,16 +88,14 @@ fun ItemCard(item: Item, navController: NavController) {
         .height(120.dp)
         .fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-        Column {
-            if(item.imageURL != null)
-                AsyncImage(item.imageURL,
-                    "user ${item.name} avatar",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxHeight().width(120.dp))
-            else Box(modifier = Modifier
-                .fillMaxHeight().width(120.dp)
-                .background(secondaryLight))
-        }
+        if (item.imageURL != null)
+            AsyncImage(model = item.imageURL,
+                contentDescription = item.name,
+                contentScale = ContentScale.Crop,
+                modifier =  Modifier.size(136.dp))
+        else Box(modifier = Modifier
+            .fillMaxHeight().width(136.dp)
+            .background(Color.Cyan))
         Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween) {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Row { Text(item.name, fontWeight = FontWeight.W600, fontSize = 24.sp) }
@@ -117,12 +118,12 @@ fun ItemCard(item: Item, navController: NavController) {
                         sendNotification(ctx)
                     }
                     Log.println(Log.INFO, "MainScreen", "Clicked item ${item.id} - ${item.name}")
-                    //navController.navigate(ItemScreenRoute(item.id.toLong()))
-//                    WorkManager.getInstance(ctx).enqueueUniquePeriodicWork(
-//                        "some_name",
-//                        ExistingPeriodicWorkPolicy.KEEP,
-//                        PeriodicWorkRequestBuilder<MyWorker>(16, TimeUnit.MINUTES).build()
-//                    )
+                    navController.navigate(ItemScreenRoute(item.id.toLong()))
+                       WorkManager.getInstance(ctx).enqueueUniquePeriodicWork(
+                           "some_name",
+                           ExistingPeriodicWorkPolicy.KEEP,
+                           PeriodicWorkRequestBuilder<MyWorker>(16, TimeUnit.MINUTES).build()
+                        )
 
                 })
                 { Text("Перейти") }
@@ -134,7 +135,9 @@ fun ItemCard(item: Item, navController: NavController) {
 private fun sendNotification(context: Context) {
     ContextCompat.startForegroundService(
         context,
-        Intent(context, NotificationService::class.java)
+        Intent(context, MediaService::class.java).apply {
+            action = MediaService.STARTFOREGROUND_ACTION
+        }
     )
 }
 

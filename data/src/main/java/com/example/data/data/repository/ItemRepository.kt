@@ -4,8 +4,8 @@ import com.example.domain.entity.Item
 import kotlinx.coroutines.delay
 
 class ItemRepository: IItemRepository {
-    private val items = listOf(Item(1, "Item1", null, null ),
-        Item(2, "Item2", null, "blabla"),
+    private val items = listOf(Item(1, "Item1", "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRQfr1rXTMG-svUWWtNQvvas4TJ6LrEFTBP5dhwAl3hIJ9GCmM0SapCQ_pxR-bIUicblifb", null ),
+        Item(2, "Item2", "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRQfr1rXTMG-svUWWtNQvvas4TJ6LrEFTBP5dhwAl3hIJ9GCmM0SapCQ_pxR-bIUicblifb", "blabla"),
         Item(3,
             "Item3",
             "https://networklessons.com/wp-content/uploads/2013/02/stub-tree.jpg",
